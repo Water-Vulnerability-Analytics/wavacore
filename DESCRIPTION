@@ -2,12 +2,16 @@ Package: wavacore
 Title: Shared Building Blocks for Water Vulnerability Analytics
 Version: 0.1.0
 Authors@R: c(
+    person("Caitlin", "Mothes", role = "aut",
+           email = "Caitlin.Mothes@colostate.edu"),
+    person("Katie", "Willi", role = "aut",
+           email = "Kathryn.Willi@colostate.edu"),
+    person("Kristen", "Cognac", role = "aut",
+           email = "Kristen.Cognac@colostate.edu"),
     person("Juan", "De La Torre", role = c("cre", "aut"),
            email = "juan.delatorre@colostate.edu"),
-    person("Kristen", "Cognac", role = "aut"),
-    person("Katie", "Willi", role = "aut"),
-    person("Caitlin", "Mothes", role = "aut"),
-    person("Cibi Vishnu", "Chinnasamy", role = "aut"))
+    person("Cibi Vishnu", "Chinnasamy", role = "aut",
+           email = "Cibi.Chinnasamy@colostate.edu"))
 Description: Functions shared by the rapid and deep-dive water supply
     vulnerability assessments of National Park Service units: the NPS water
     supply database, park unit lists, park boundaries, and unit visitation.
