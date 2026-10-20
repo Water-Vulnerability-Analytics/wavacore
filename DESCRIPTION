@@ -1,0 +1,36 @@
+Package: wavacore
+Title: Shared Building Blocks for Water Vulnerability Analytics
+Version: 0.1.0
+Authors@R: c(
+    person("Juan", "De La Torre", role = c("cre", "aut"),
+           email = "juan.delatorre@colostate.edu"),
+    person("Kristen", "Cognac", role = "aut"),
+    person("Katie", "Willi", role = "aut"),
+    person("Caitlin", "Mothes", role = "aut"),
+    person("Cibi Vishnu", "Chinnasamy", role = "aut"))
+Description: Functions shared by the rapid and deep-dive water supply
+    vulnerability assessments of National Park Service units: the NPS water
+    supply database, park unit lists, park boundaries, and unit visitation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+URL: https://github.com/Water-Vulnerability-Analytics/wavacore
+BugReports: https://github.com/Water-Vulnerability-Analytics/wavacore/issues
+Imports: 
+    curl,
+    dplyr,
+    httr,
+    igraph,
+    janitor,
+    jsonlite,
+    magrittr,
+    purrr,
+    readr,
+    readxl,
+    sf,
+    stringr,
+    tibble,
+    tidyr,
+    tigris,
+    utils
+Config/roxygen2/version: 8.0.0
