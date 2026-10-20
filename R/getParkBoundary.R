@@ -10,6 +10,7 @@
 #' @param path If `save = TRUE`, the file path to save the shapefile
 #' 
 #' @return A spatial sf object for each specified park boundary
+#' @export
 getParkBoundary <- function(park, save = FALSE, path = NULL){
   
   parks <- getParkSystem()

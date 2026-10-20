@@ -72,7 +72,7 @@ get_wsd <- function(conus = TRUE,
       # nothing missing, nothing to fill
       if (nrow(WSD_missing) == 0) {
         
-        message("No missing coordinates found — skipping centroid fill step.")
+        message("No missing coordinates found \u2014 skipping centroid fill step.")
         
       } else {
         
@@ -85,7 +85,7 @@ get_wsd <- function(conus = TRUE,
         # missing coords exist, but none matched a park polygon
         if (nrow(units_poly) == 0) {
           
-          warning("No matching park units found for sites with missing coordinates — skipping centroid fill.")
+          warning("No matching park units found for sites with missing coordinates \u2014 skipping centroid fill.")
           
         } else {
           

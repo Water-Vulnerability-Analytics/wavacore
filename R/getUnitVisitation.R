@@ -11,6 +11,7 @@
 #'
 #' @return A single dataframe/tibble of visitation statistics for specified parks.
 #' Dataframe contains visitation numbers for each month of each year.
+#' @export
 getUnitVisitation <- function(units,
                               startMonth = 1,
                               startYear,

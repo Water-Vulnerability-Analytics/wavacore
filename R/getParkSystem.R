@@ -7,7 +7,11 @@
 #' 
 #' LAST UPDATED: SEPTEMBER 2025
 #' 
+#' @param save Logical. If TRUE and `path` is given, also writes the boundaries to a GeoPackage in `path`.
+#' @param path Folder to write the GeoPackage to when `save = TRUE`.
+#'
 #' @return A spatial sf object for all park boundaries
+#' @export
 getParkSystem <- function(save = FALSE, path = NULL){
   
 
