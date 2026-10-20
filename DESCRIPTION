@@ -11,7 +11,8 @@ Authors@R: c(
     person("Juan", "De La Torre", role = c("cre", "aut"),
            email = "juan.delatorre@colostate.edu"),
     person("Cibi Vishnu", "Chinnasamy", role = "aut",
-           email = "Cibi.Chinnasamy@colostate.edu"))
+           email = "Cibi.Chinnasamy@colostate.edu"),
+    person("ROSS - Radical Open Science Syndicate and all contributors", role = "cph"))
 Description: Functions shared by the rapid and deep-dive water supply
     vulnerability assessments of National Park Service units: the NPS water
     supply database, park unit lists, park boundaries, and unit visitation.
