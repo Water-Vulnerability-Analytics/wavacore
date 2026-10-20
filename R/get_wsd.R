@@ -10,6 +10,8 @@
 #' @param sf Logical. If TRUE (default), returns the data as an sf spatial object (CRS: 4326).
 #' @param rapid Logical. If TRUE, applies "Rapid" assessment presets: forces CONUS, 
 #'   fills missing coords, and filters to NPS-operated systems only (non-muncipal/hauled/tribal/concession)
+#' @param path Path to the water supply database workbook. Defaults to the
+#'   file in the shared WaVA data folder, see [wava_data_path()].
 #'
 #' @return A data frame or sf object containing processed water supply system data.
 #' @export
@@ -17,7 +19,9 @@ get_wsd <- function(conus = TRUE,
                     fill_empty_coords = FALSE,
                     park = NULL,
                     sf = TRUE,
-                    rapid = FALSE) {
+                    rapid = FALSE,
+                    path = wava_data_path("Water_Supply_Systems",
+                                          "NPS_Water_Systems_Database_Joined.xlsx")) {
   
   
   if (rapid == TRUE) {
@@ -28,7 +32,7 @@ get_wsd <- function(conus = TRUE,
   }
   
   # --- Error Checking: File Existence ---
-  table_path <- "data/Water_Supply_Systems/NPS_Water_Systems_Database_Joined.xlsx"
+  table_path <- path
   
   if (!file.exists(table_path)) {
     stop(paste("WSD file not found at:", table_path, 

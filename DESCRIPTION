@@ -38,3 +38,7 @@ Imports:
     tigris,
     utils
 Config/roxygen2/version: 8.0.0
+Suggests: 
+    testthat,
+    withr
+Config/testthat/edition: 3

@@ -22,10 +22,10 @@ Useful links:
 Authors:
 \itemize{
   \item Juan De La Torre \email{juan.delatorre@colostate.edu}
-  \item Kristen Cognac
-  \item Katie Willi
-  \item Caitlin Mothes
-  \item Cibi Vishnu Chinnasamy
+  \item Caitlin Mothes \email{Caitlin.Mothes@colostate.edu}
+  \item Katie Willi \email{Kathryn.Willi@colostate.edu}
+  \item Kristen Cognac \email{Kristen.Cognac@colostate.edu}
+  \item Cibi Vishnu Chinnasamy \email{Cibi.Chinnasamy@colostate.edu}
 }
 
 }
