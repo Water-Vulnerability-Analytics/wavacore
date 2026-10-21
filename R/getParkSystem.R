@@ -19,9 +19,9 @@ getParkSystem <- function(save = FALSE, path = NULL){
   
   #download boundary 
   temp1 <- tempfile()
-  download.file(downloadLink, destfile = temp1, method = "curl")
+  utils::download.file(downloadLink, destfile = temp1, method = "curl")
   temp2 <- tempfile()
-  unzip(temp1, exdir = temp2)
+  utils::unzip(temp1, exdir = temp2)
   
   
   parks <- sf::st_read(paste0(temp2, "/nps_boundary.shp")) %>%

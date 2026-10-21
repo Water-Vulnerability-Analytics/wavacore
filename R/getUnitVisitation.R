@@ -38,7 +38,7 @@ getUnitVisitation <- function(units,
     dat_json <- jsonlite::fromJSON(dat_text, flatten = TRUE)
     
     #convert items to data.frame
-    final_df <- as_tibble(dat_json)
+    final_df <- tibble::as_tibble(dat_json)
     
   } else {
     
@@ -74,7 +74,7 @@ getUnitVisitation <- function(units,
                                               "MISC"  = "MiscellaneousOvernightStays",
                                               "NROS"  = "NonRecreationOvernightStays",
                                               "TOS"   = "TotalOvernightStays")) %>%
-      pivot_wider(names_from = Statistic,
+      tidyr::pivot_wider(names_from = Statistic,
                   values_from = Value)
     
   }
