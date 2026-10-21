@@ -71,8 +71,11 @@ wava_data_dir <- function() {
 #' as [file.path()]. Package functions use it for their default file paths, so
 #' they find the shared data wherever it is on your computer.
 #'
-#' @param ... Path pieces below the data folder, as character strings, as in
-#'   [file.path()]. With no pieces, returns the data folder itself.
+#' @param ... Strings. Path pieces below the data folder, as in [file.path()].
+#'   * One or more pieces, e.g. `"rapid", "inputs"`: returns
+#'     `<data folder>/rapid/inputs`.
+#'   * No pieces: returns the data folder itself, the same as
+#'     [wava_data_dir()].
 #' @return A path as a character string. The function does not check that the
 #'   file exists.
 #' @export

@@ -6,25 +6,57 @@
 #' US or some park units, and converts the result to an sf object of points.
 #' Stops with an error if the workbook is not found at `path`.
 #'
-#' @param conus Logical. If `TRUE` (default), drops sources in Alaska, Hawaii
-#'   and the territories (`state` is AK, AS, HI, MP, PR, VI or GU).
-#' @param fill_empty_coords Logical. If `TRUE`, sources with no coordinates get
-#'   a point inside their park unit, from [getParkSystem()]. For a unit made of
-#'   separate pieces, the point is in a piece in the source's state. Adds a
-#'   `coords_flag` column. Downloads the NPS and US state boundaries, so it
-#'   needs internet. Default `FALSE`.
-#' @param park Character vector of four-letter park unit codes, e.g.
-#'   `c("ROMO", "GRCA")`. If `NULL` (default), keeps every park.
-#' @param sf Logical. If `TRUE` (default), returns an sf object of points (CRS
-#'   4326) and drops sources that still have no coordinates. If `FALSE`,
-#'   returns a tibble with every source.
-#' @param rapid Logical. If `TRUE`, uses the rapid assessment settings: sets
-#'   `conus`, `fill_empty_coords` and `sf` to `TRUE`, and drops sources whose
-#'   `source_type` mentions municipal, hauled, tribal or purchased water.
-#'   Default `FALSE`.
-#' @param path Path to the WSD workbook. Defaults to
+#' @param conus Logical. Whether to keep only sources in the contiguous US.
+#'   * `TRUE`: drops sources whose `state` is AK, AS, HI, MP, PR, VI or GU
+#'     (Alaska, Hawaii and the territories).
+#'   * `FALSE`: keeps sources in every state and territory.
+#'
+#'   Ignored when `rapid = TRUE`, which always uses `TRUE`. Default: `TRUE`.
+#' @param fill_empty_coords Logical. Whether to fill in coordinates for sources
+#'   that have no longitude or latitude in the database.
+#'   * `TRUE`: downloads the NPS unit boundaries ([getParkSystem()]) and the US
+#'     state boundaries, so it needs internet and takes longer. Each source
+#'     with missing coordinates gets a point inside its park unit. For a unit
+#'     made of separate pieces, the point is in the piece in the source's
+#'     state (or the park's state when `source_state` is empty); if several
+#'     pieces match, the first one is used. Sources whose park unit has no
+#'     boundary keep empty coordinates. Adds a `coords_flag` column
+#'     (`"Source Coordinates"` or `"Centroid"`), and the filled rows are moved
+#'     to the end of the table.
+#'   * `FALSE`: keeps the coordinates as they are in the database, downloads
+#'     nothing, and adds no `coords_flag` column.
+#'
+#'   Ignored when `rapid = TRUE`, which always uses `TRUE`. Default: `FALSE`.
+#' @param park Character vector or `NULL`. The park units to keep.
+#'   * A character vector of four-letter unit codes, e.g. `c("ROMO", "GRCA")`:
+#'     keeps only sources whose `park_unit` is one of them. Codes that match
+#'     nothing are dropped without a warning. The filter runs after the
+#'     coordinate fill, so it doesn't make `fill_empty_coords = TRUE` faster.
+#'   * `NULL`: keeps every park.
+#'
+#'   Default: `NULL`.
+#' @param sf Logical. The class of the result.
+#'   * `TRUE`: returns an sf object of points (CRS 4326, longitude/latitude)
+#'     built from `source_longitude` and `source_latitude`, which are kept as
+#'     columns. Sources that still have no coordinates are dropped.
+#'   * `FALSE`: returns a tibble with every source, including those with no
+#'     coordinates.
+#'
+#'   Ignored when `rapid = TRUE`, which always uses `TRUE`. Default: `TRUE`.
+#' @param rapid Logical. Whether to use the settings for the rapid assessment.
+#'   * `TRUE`: uses `conus = TRUE`, `fill_empty_coords = TRUE` and
+#'     `sf = TRUE`, whatever those arguments are set to. Also drops sources
+#'     whose `source_type` mentions municipal, hauled, tribal or purchased
+#'     water (any case), and sources with no `source_type`.
+#'   * `FALSE`: uses `conus`, `fill_empty_coords` and `sf` as given, and keeps
+#'     every source type.
+#'
+#'   Default: `FALSE`.
+#' @param path String. Path to the WSD workbook (`.xlsx`). The function reads
+#'   the first sheet, skips its first row, and treats `"NA"` and `"U"` as
+#'   missing. If no file exists at `path`, it stops with an error. Default:
 #'   `Water_Supply_Systems/NPS_Water_Systems_Database_Joined.xlsx` in the shared
-#'   data folder; see [wava_data_path()].
+#'   data folder, see [wava_data_path()].
 #'
 #' @return One row per water source, with the workbook's columns renamed to
 #'   snake_case (`park_unit`, `wsd_source_id`, `source_type`, `state`, ...). An

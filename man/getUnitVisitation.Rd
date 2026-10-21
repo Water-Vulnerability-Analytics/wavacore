@@ -14,19 +14,32 @@ getUnitVisitation(
 )
 }
 \arguments{
-\item{units}{Character vector of four-letter unit codes, e.g.
-\code{c("ROMO", "GRCA")}.}
+\item{units}{Character vector. Four-letter unit codes, e.g.
+\code{c("ROMO", "GRCA")}. Required.}
 
-\item{startMonth}{First month to include, 1-12. Default 1 (January).}
+\item{startMonth}{Integer, 1-12. The first month to include, in
+\code{startYear}. Default: \code{1} (January).}
 
-\item{startYear}{First year to include.}
+\item{startYear}{Integer. The first year to include. Required.}
 
-\item{endMonth}{Last month to include, 1-12. Default 12 (December).}
+\item{endMonth}{Integer, 1-12. The last month to include, in \code{endYear}.
+Default: \code{12} (December).}
 
-\item{endYear}{Last year to include.}
+\item{endYear}{Integer. The last year to include. Required.}
 
-\item{allStats}{Logical. If \code{TRUE}, returns every statistic from the full
-dataset (a larger, slower download). Default \code{FALSE}.}
+\item{allStats}{Logical. Where the data comes from and which statistics are
+returned.
+\itemize{
+\item \code{TRUE}: downloads the full visitation dataset from the NPS Data Store
+and keeps the requested units and months. Slower (a few seconds), and
+returns every statistic: visitor hours, overnight stays, campers and so
+on, without \code{UnitName}.
+\item \code{FALSE}: asks the IRMA STATS REST API for the requested units and
+months. Fast, and returns \code{UnitName}, \code{RecreationVisitors} and
+\code{NonRecreationVisitors} only.
+}
+
+Default: \code{FALSE}.}
 }
 \value{
 A tibble with one row per unit and month. With \code{allStats = FALSE},

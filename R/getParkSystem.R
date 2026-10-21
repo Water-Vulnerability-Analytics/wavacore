@@ -11,11 +11,19 @@
 #' Store API documentation
 #' <https://irmaservices.nps.gov/datastore/v6/documentation/datastore-api.html>.
 #'
-#' @param save Logical. If `TRUE` and `path` is given, also writes the
-#'   boundaries to a GeoPackage named `nps_park_boundaries_<date>.gpkg` in
-#'   `path`. Default `FALSE`.
-#' @param path Folder to write the GeoPackage to when `save = TRUE`. If `NULL`
-#'   (default), nothing is written, even with `save = TRUE`.
+#' @param save Logical. Whether to also write the boundaries to a file.
+#'   * `TRUE` with a `path`: writes a GeoPackage named
+#'     `nps_park_boundaries_<today's date>.gpkg` in `path`, replacing a file
+#'     of the same name.
+#'   * `TRUE` without a `path`: writes nothing, without a message.
+#'   * `FALSE`: writes nothing.
+#'
+#'   Default: `FALSE`.
+#' @param path String or `NULL`. The folder to write the GeoPackage to.
+#'   * A folder path: used when `save = TRUE`. The folder must already exist.
+#'   * `NULL`: nothing is written, even with `save = TRUE`.
+#'
+#'   Default: `NULL`.
 #'
 #' @return An sf object of multipolygons (CRS NAD83), one row per NPS unit,
 #'   with columns such as `UNIT_CODE`, `UNIT_NAME`, `UNIT_TYPE`, `STATE` and
