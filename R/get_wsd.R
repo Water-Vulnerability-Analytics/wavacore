@@ -49,6 +49,7 @@
 #'   wsd_rapid <- get_wsd(rapid = TRUE)
 #'   table(wsd_rapid$coords_flag)
 #' }
+
 get_wsd <- function(conus = TRUE,
                     fill_empty_coords = FALSE,
                     park = NULL,

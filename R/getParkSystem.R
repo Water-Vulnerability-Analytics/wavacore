@@ -30,6 +30,7 @@
 #' # Also save a copy as a GeoPackage
 #' parks <- getParkSystem(save = TRUE, path = tempdir())
 #' list.files(tempdir(), pattern = "gpkg$")
+
 getParkSystem <- function(save = FALSE, path = NULL){
   
 

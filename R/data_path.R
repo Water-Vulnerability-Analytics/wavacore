@@ -58,6 +58,7 @@
 #' # Put the settings back
 #' options(old_opt)
 #' if (is.na(old_env)) Sys.unsetenv("WAVA_DATA_DIR") else Sys.setenv(WAVA_DATA_DIR = old_env)
+
 wava_data_dir <- function() {
   env <- Sys.getenv("WAVA_DATA_DIR")
   getOption("wava.data_dir", if (nzchar(env)) env else "data")
@@ -84,4 +85,5 @@ wava_data_dir <- function() {
 #'
 #' # Check whether a file is there before reading it
 #' file.exists(wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx"))
+
 wava_data_path <- function(...) file.path(wava_data_dir(), ...)

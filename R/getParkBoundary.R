@@ -26,6 +26,7 @@
 #' # Also save one shapefile per park in tempdir()
 #' bounds <- getParkBoundary("ROMO", save = TRUE, path = paste0(tempdir(), "/"))
 #' list.files(file.path(tempdir(), "ROMO"))
+
 getParkBoundary <- function(park, save = FALSE, path = NULL){
   
   parks <- getParkSystem()

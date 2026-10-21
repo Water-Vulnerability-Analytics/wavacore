@@ -36,6 +36,7 @@
 #' if (interactive()) {
 #'   getUnitVisitation("ROMO", startYear = 2023, endYear = 2023, allStats = TRUE)
 #' }
+
 getUnitVisitation <- function(units,
                               startMonth = 1,
                               startYear,
