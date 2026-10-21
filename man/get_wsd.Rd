@@ -9,7 +9,8 @@ get_wsd(
   fill_empty_coords = FALSE,
   park = NULL,
   sf = TRUE,
-  rapid = FALSE
+  rapid = FALSE,
+  path = wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx")
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ with the respective park unit's centroid.}
 
 \item{rapid}{Logical. If TRUE, applies "Rapid" assessment presets: forces CONUS,
 fills missing coords, and filters to NPS-operated systems only (non-muncipal/hauled/tribal/concession)}
+
+\item{path}{Path to the water supply database workbook. Defaults to the
+file in the shared WaVA data folder, see \code{\link[=wava_data_path]{wava_data_path()}}.}
 }
 \value{
 A data frame or sf object containing processed water supply system data.
