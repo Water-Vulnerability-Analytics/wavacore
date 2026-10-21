@@ -10,6 +10,12 @@ test_that("wava_data_dir() reads WAVA_DATA_DIR", {
   expect_equal(wava_data_dir(), "/from/env")
 })
 
+test_that("an empty WAVA_DATA_DIR counts as unset", {
+  withr::local_options(wava.data_dir = NULL)
+  withr::local_envvar(WAVA_DATA_DIR = "")
+  expect_equal(wava_data_dir(), "data")
+})
+
 test_that("the wava.data_dir option beats the environment variable", {
   withr::local_options(wava.data_dir = "/from/option")
   withr::local_envvar(WAVA_DATA_DIR = "/from/env")

@@ -1,20 +1,55 @@
-#' Retrieve and Process NPS Water Supply Database (WSD)
+#' @title Load the NPS Water Supply Database (WSD)
 #'
-#' This function loads the NPS Water Supply Database, performs spatial cleaning,
-#' and allows for filtering by geography and park unit.
+#' @description
+#' Reads the NPS Water Supply Database workbook and cleans the column names.
+#' Optionally fills in missing source coordinates, keeps only the contiguous
+#' US or some park units, and converts the result to an sf object of points.
+#' Stops with an error if the workbook is not found at `path`.
 #'
-#' @param conus Logical. If TRUE (default), filters out non-contiguous states and territories.
-#' @param fill_empty_coords Logical. If TRUE (default), fills missing source coordinates 
-#' with the respective park unit's centroid.
-#' @param park Character vector. Optional list of four-letter park unit codes (e.g., c("ROMO", "GRCA")).
-#' @param sf Logical. If TRUE (default), returns the data as an sf spatial object (CRS: 4326).
-#' @param rapid Logical. If TRUE, applies "Rapid" assessment presets: forces CONUS, 
-#'   fills missing coords, and filters to NPS-operated systems only (non-muncipal/hauled/tribal/concession)
-#' @param path Path to the water supply database workbook. Defaults to the
-#'   file in the shared WaVA data folder, see [wava_data_path()].
+#' @param conus Logical. If `TRUE` (default), drops sources in Alaska, Hawaii
+#'   and the territories (`state` is AK, AS, HI, MP, PR, VI or GU).
+#' @param fill_empty_coords Logical. If `TRUE`, sources with no coordinates get
+#'   a point inside their park unit, from [getParkSystem()]. For a unit made of
+#'   separate pieces, the point is in a piece in the source's state. Adds a
+#'   `coords_flag` column. Downloads the NPS and US state boundaries, so it
+#'   needs internet. Default `FALSE`.
+#' @param park Character vector of four-letter park unit codes, e.g.
+#'   `c("ROMO", "GRCA")`. If `NULL` (default), keeps every park.
+#' @param sf Logical. If `TRUE` (default), returns an sf object of points (CRS
+#'   4326) and drops sources that still have no coordinates. If `FALSE`,
+#'   returns a tibble with every source.
+#' @param rapid Logical. If `TRUE`, uses the rapid assessment settings: sets
+#'   `conus`, `fill_empty_coords` and `sf` to `TRUE`, and drops sources whose
+#'   `source_type` mentions municipal, hauled, tribal or purchased water.
+#'   Default `FALSE`.
+#' @param path Path to the WSD workbook. Defaults to
+#'   `Water_Supply_Systems/NPS_Water_Systems_Database_Joined.xlsx` in the shared
+#'   data folder; see [wava_data_path()].
 #'
-#' @return A data frame or sf object containing processed water supply system data.
+#' @return One row per water source, with the workbook's columns renamed to
+#'   snake_case (`park_unit`, `wsd_source_id`, `source_type`, `state`, ...). An
+#'   sf object of points if `sf = TRUE`, otherwise a tibble. With
+#'   `fill_empty_coords = TRUE`, `coords_flag` says whether the coordinates come
+#'   from the database (`"Source Coordinates"`) or were filled in
+#'   (`"Centroid"`).
 #' @export
+#' @seealso [getParkSystem()], which supplies the park boundaries used to fill
+#'   in coordinates; [wava_data_path()] for the default `path`.
+#' @examplesIf file.exists(wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx"))
+#' # Water sources for two parks, as points
+#' wsd <- get_wsd(park = c("ROMO", "GRCA"))
+#' head(wsd)
+#'
+#' # The whole database as a table, including sources with no coordinates
+#' wsd_all <- get_wsd(conus = FALSE, sf = FALSE)
+#' nrow(wsd_all)
+#'
+#' # The rapid assessment set (downloads park and state boundaries)
+#' if (interactive()) {
+#'   wsd_rapid <- get_wsd(rapid = TRUE)
+#'   table(wsd_rapid$coords_flag)
+#' }
+
 get_wsd <- function(conus = TRUE,
                     fill_empty_coords = FALSE,
                     park = NULL,

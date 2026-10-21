@@ -1,17 +1,42 @@
-#' Retrieve NPS park visitation data
+#' @title Get monthly visitation for NPS units
 #'
-#' This function uses the IRMA STATS REST Api to pull visitation data for Nation Parks
+#' @description
+#' Gets monthly visitor counts for one or more NPS units from NPS Visitor Use
+#' Statistics. By default it calls the IRMA STATS REST API, which returns
+#' recreation and non-recreation visitors. With `allStats = TRUE` it downloads
+#' the full visitation dataset from the NPS Data Store instead, which has every
+#' statistic (visitor hours, overnight stays, campers and so on). Needs
+#' internet.
 #'
-#' @param units The park unit(s) 4 digit code to get visitation for. Can supply a string of park codes or single code.
-#' @param startMonth The start month for visitation data, values 1-12. Default is 1 (January).
-#' @param startYear The start year for visitation data.
-#' @param endMonth The end month for visitation data, values 1-12. Default is 12 (December).
-#' @param endYear The end year for visitation data.
-#' @param allStats If TRUE, pulls all visitation statistics from the IRMA dataset. Default is FALSE.
+#' @param units Character vector of four-letter unit codes, e.g.
+#'   `c("ROMO", "GRCA")`.
+#' @param startMonth First month to include, 1-12. Default 1 (January).
+#' @param startYear First year to include.
+#' @param endMonth Last month to include, 1-12. Default 12 (December).
+#' @param endYear Last year to include.
+#' @param allStats Logical. If `TRUE`, returns every statistic from the full
+#'   dataset (a larger, slower download). Default `FALSE`.
 #'
-#' @return A single dataframe/tibble of visitation statistics for specified parks.
-#' Dataframe contains visitation numbers for each month of each year.
+#' @return A tibble with one row per unit and month. With `allStats = FALSE`,
+#'   the columns are `UnitCode`, `UnitName`, `Year`, `Month`,
+#'   `RecreationVisitors` and `NonRecreationVisitors`. With `allStats = TRUE`,
+#'   they are `UnitCode`, `Year`, `Month` and one column per statistic (e.g.
+#'   `RecreationVisitors`, `TotalVisitors`, `TotalOvernightStays`).
 #' @export
+#' @seealso [getParkSystem()] to look up unit codes (`UNIT_CODE`).
+#' @examplesIf curl::has_internet()
+#' # Monthly visitation for two parks in 2023
+#' getUnitVisitation(c("ROMO", "GRCA"), startYear = 2023, endYear = 2023)
+#'
+#' # Summer months only
+#' getUnitVisitation("ROMO", startMonth = 6, startYear = 2023,
+#'                   endMonth = 8, endYear = 2023)
+#'
+#' # Every statistic, from the full dataset (slower)
+#' if (interactive()) {
+#'   getUnitVisitation("ROMO", startYear = 2023, endYear = 2023, allStats = TRUE)
+#' }
+
 getUnitVisitation <- function(units,
                               startMonth = 1,
                               startYear,

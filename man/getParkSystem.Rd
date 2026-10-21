@@ -2,24 +2,45 @@
 % Please edit documentation in R/getParkSystem.R
 \name{getParkSystem}
 \alias{getParkSystem}
-\title{Import park boundary shapefile}
+\title{Download the boundaries of all NPS units}
 \usage{
 getParkSystem(save = FALSE, path = NULL)
 }
 \arguments{
-\item{save}{Logical. If TRUE and \code{path} is given, also writes the boundaries to a GeoPackage in \code{path}.}
+\item{save}{Logical. If \code{TRUE} and \code{path} is given, also writes the
+boundaries to a GeoPackage named \verb{nps_park_boundaries_<date>.gpkg} in
+\code{path}. Default \code{FALSE}.}
 
-\item{path}{Folder to write the GeoPackage to when \code{save = TRUE}.}
+\item{path}{Folder to write the GeoPackage to when \code{save = TRUE}. If \code{NULL}
+(default), nothing is written, even with \code{save = TRUE}.}
 }
 \value{
-A spatial sf object for all park boundaries
+An sf object of multipolygons (CRS NAD83), one row per NPS unit,
+with columns such as \code{UNIT_CODE}, \code{UNIT_NAME}, \code{UNIT_TYPE}, \code{STATE} and
+\code{REGION}.
 }
 \description{
-This function uses the Data Store REST Api to download national park boundary
-shapefiles.
-Use this resource to get updated REST URL: https://irmaservices.nps.gov/datastore/v6/documentation/datastore-api.html#/Search_By_Reference_Code/ReferenceCodeSearch_Get
-And this to find updated download links: https://irma.nps.gov/DataStore/Reference/Profile/2224545?lnv=True
+Downloads the boundaries of every NPS unit from the NPS Data Store as a
+zipped shapefile (\code{nps_boundary.shp}, about 29 MB), reads it, and repairs
+invalid geometries with \code{\link[sf:st_make_valid]{sf::st_make_valid()}}. Needs internet.
+
+The download link is fixed in the code (last updated September 2025). To
+find a newer one, see the Data Store reference page
+\url{https://irma.nps.gov/DataStore/Reference/Profile/2224545} and the Data
+Store API documentation
+\url{https://irmaservices.nps.gov/datastore/v6/documentation/datastore-api.html}.
 }
-\details{
-LAST UPDATED: SEPTEMBER 2025
+\examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+parks <- getParkSystem()
+parks[parks$UNIT_TYPE == "National Park", c("UNIT_CODE", "UNIT_NAME")]
+
+# Also save a copy as a GeoPackage
+parks <- getParkSystem(save = TRUE, path = tempdir())
+list.files(tempdir(), pattern = "gpkg$")
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{\link[=getParkBoundary]{getParkBoundary()}} for selected units only; \code{\link[=get_wsd]{get_wsd()}}, which
+uses these boundaries to fill in missing coordinates.
 }

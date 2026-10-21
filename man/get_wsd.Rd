@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_wsd.R
 \name{get_wsd}
 \alias{get_wsd}
-\title{Retrieve and Process NPS Water Supply Database (WSD)}
+\title{Load the NPS Water Supply Database (WSD)}
 \usage{
 get_wsd(
   conus = TRUE,
@@ -14,25 +14,63 @@ get_wsd(
 )
 }
 \arguments{
-\item{conus}{Logical. If TRUE (default), filters out non-contiguous states and territories.}
+\item{conus}{Logical. If \code{TRUE} (default), drops sources in Alaska, Hawaii
+and the territories (\code{state} is AK, AS, HI, MP, PR, VI or GU).}
 
-\item{fill_empty_coords}{Logical. If TRUE (default), fills missing source coordinates
-with the respective park unit's centroid.}
+\item{fill_empty_coords}{Logical. If \code{TRUE}, sources with no coordinates get
+a point inside their park unit, from \code{\link[=getParkSystem]{getParkSystem()}}. For a unit made of
+separate pieces, the point is in a piece in the source's state. Adds a
+\code{coords_flag} column. Downloads the NPS and US state boundaries, so it
+needs internet. Default \code{FALSE}.}
 
-\item{park}{Character vector. Optional list of four-letter park unit codes (e.g., c("ROMO", "GRCA")).}
+\item{park}{Character vector of four-letter park unit codes, e.g.
+\code{c("ROMO", "GRCA")}. If \code{NULL} (default), keeps every park.}
 
-\item{sf}{Logical. If TRUE (default), returns the data as an sf spatial object (CRS: 4326).}
+\item{sf}{Logical. If \code{TRUE} (default), returns an sf object of points (CRS
+4326) and drops sources that still have no coordinates. If \code{FALSE},
+returns a tibble with every source.}
 
-\item{rapid}{Logical. If TRUE, applies "Rapid" assessment presets: forces CONUS,
-fills missing coords, and filters to NPS-operated systems only (non-muncipal/hauled/tribal/concession)}
+\item{rapid}{Logical. If \code{TRUE}, uses the rapid assessment settings: sets
+\code{conus}, \code{fill_empty_coords} and \code{sf} to \code{TRUE}, and drops sources whose
+\code{source_type} mentions municipal, hauled, tribal or purchased water.
+Default \code{FALSE}.}
 
-\item{path}{Path to the water supply database workbook. Defaults to the
-file in the shared WaVA data folder, see \code{\link[=wava_data_path]{wava_data_path()}}.}
+\item{path}{Path to the WSD workbook. Defaults to
+\code{Water_Supply_Systems/NPS_Water_Systems_Database_Joined.xlsx} in the shared
+data folder; see \code{\link[=wava_data_path]{wava_data_path()}}.}
 }
 \value{
-A data frame or sf object containing processed water supply system data.
+One row per water source, with the workbook's columns renamed to
+snake_case (\code{park_unit}, \code{wsd_source_id}, \code{source_type}, \code{state}, ...). An
+sf object of points if \code{sf = TRUE}, otherwise a tibble. With
+\code{fill_empty_coords = TRUE}, \code{coords_flag} says whether the coordinates come
+from the database (\code{"Source Coordinates"}) or were filled in
+(\code{"Centroid"}).
 }
 \description{
-This function loads the NPS Water Supply Database, performs spatial cleaning,
-and allows for filtering by geography and park unit.
+Reads the NPS Water Supply Database workbook and cleans the column names.
+Optionally fills in missing source coordinates, keeps only the contiguous
+US or some park units, and converts the result to an sf object of points.
+Stops with an error if the workbook is not found at \code{path}.
+}
+\examples{
+\dontshow{if (file.exists(wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx"))) withAutoprint(\{ # examplesIf}
+# Water sources for two parks, as points
+wsd <- get_wsd(park = c("ROMO", "GRCA"))
+head(wsd)
+
+# The whole database as a table, including sources with no coordinates
+wsd_all <- get_wsd(conus = FALSE, sf = FALSE)
+nrow(wsd_all)
+
+# The rapid assessment set (downloads park and state boundaries)
+if (interactive()) {
+  wsd_rapid <- get_wsd(rapid = TRUE)
+  table(wsd_rapid$coords_flag)
+}
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{\link[=getParkSystem]{getParkSystem()}}, which supplies the park boundaries used to fill
+in coordinates; \code{\link[=wava_data_path]{wava_data_path()}} for the default \code{path}.
 }

@@ -7,10 +7,67 @@
 wava_data_dir()
 }
 \value{
-A path as a character string.
+The path to the data folder, as a character string. The function
+does not check that the folder exists.
 }
 \description{
-Looks for the folder in this order: \code{options(wava.data_dir = ...)}, the
-\code{WAVA_DATA_DIR} environment variable, then \code{"data"} in the working directory
-(the link to the shared OneDrive folder that every WaVA repo already has).
+Returns the folder that holds the shared WaVA data (the \code{data} folder in the
+OneDrive shared library). Functions in \code{wavacore}, \code{wavarapid},
+\code{wavadeepdive} and \code{npswbm} build their default file paths from it, through
+\code{\link[=wava_data_path]{wava_data_path()}}.
+
+Looks for the folder in this order:
+\enumerate{
+\item \code{options(wava.data_dir = ...)}
+\item the \code{WAVA_DATA_DIR} environment variable (an empty value counts as unset)
+\item \code{"data"} in the working directory (the link to the shared OneDrive folder
+that every WaVA repo already has)
+}
+}
+\details{
+Which one to use:
+\itemize{
+\item \strong{Environment variable} (recommended; set it once per computer). Open
+your user \code{.Renviron} file with \code{usethis::edit_r_environ()}, add a line
+like the one below, and restart R. Keep the quotes: the OneDrive path has
+spaces.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{WAVA_DATA_DIR="~/Library/CloudStorage/OneDrive-SharedLibraries-Colostate/WCNR NPS-CSU-DRI - Water for People (WFP)/data"
+}\if{html}{\out{</div>}}
+\item \strong{Option} (one session or one script). \code{options(wava.data_dir = "...")}
+at the top of a script overrides the environment variable until R
+restarts.
+\item \strong{\code{data} folder} (nothing to set). Works when the working directory has a
+\code{data} folder or link, as in \code{nps_water_vulnerability}. When you knit an
+Rmd that sits in a subfolder, the working directory is that subfolder, so
+use one of the other two.
+}
+}
+\examples{
+# Where the data folder is in this session
+wava_data_dir()
+
+# Save the current settings so the examples below can put them back
+old_opt <- options(wava.data_dir = NULL)
+old_env <- Sys.getenv("WAVA_DATA_DIR", unset = NA)
+Sys.unsetenv("WAVA_DATA_DIR")
+
+# 3. Nothing set: "data" in the working directory
+wava_data_dir()
+
+# 2. The environment variable. Normally you set it once in ~/.Renviron;
+# Sys.setenv() sets it for this session only.
+Sys.setenv(WAVA_DATA_DIR = "/path/to/shared/data")
+wava_data_dir()
+
+# 1. The option, which beats the environment variable
+options(wava.data_dir = "/another/data/folder")
+wava_data_dir()
+
+# Put the settings back
+options(old_opt)
+if (is.na(old_env)) Sys.unsetenv("WAVA_DATA_DIR") else Sys.setenv(WAVA_DATA_DIR = old_env)
+}
+\seealso{
+\code{\link[=wava_data_path]{wava_data_path()}} to build a path inside the data folder.
 }
