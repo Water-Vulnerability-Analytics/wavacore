@@ -7,14 +7,27 @@
 wava_data_path(...)
 }
 \arguments{
-\item{...}{Path pieces below the data root, as in \code{\link[=file.path]{file.path()}}.}
+\item{...}{Path pieces below the data folder, as character strings, as in
+\code{\link[=file.path]{file.path()}}. With no pieces, returns the data folder itself.}
 }
 \value{
-A path as a character string.
+A path as a character string. The function does not check that the
+file exists.
 }
 \description{
-Build a path inside the shared WaVA data folder
+Joins path pieces onto the data folder from \code{\link[=wava_data_dir]{wava_data_dir()}}, the same way
+as \code{\link[=file.path]{file.path()}}. Package functions use it for their default file paths, so
+they find the shared data wherever it is on your computer.
 }
 \examples{
 wava_data_path("rapid", "inputs")
+
+# The water supply database that get_wsd() reads by default
+wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx")
+
+# Check whether a file is there before reading it
+file.exists(wava_data_path("Water_Supply_Systems", "NPS_Water_Systems_Database_Joined.xlsx"))
+}
+\seealso{
+\code{\link[=wava_data_dir]{wava_data_dir()}} for how the data folder is found.
 }

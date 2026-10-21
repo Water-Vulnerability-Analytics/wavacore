@@ -2,23 +2,42 @@
 % Please edit documentation in R/getParkBoundary.R
 \name{getParkBoundary}
 \alias{getParkBoundary}
-\title{Import park boundary shapefile}
+\title{Get the boundaries of selected NPS units}
 \usage{
 getParkBoundary(park, save = FALSE, path = NULL)
 }
 \arguments{
-\item{park}{The 4 digit national park code(s) for parks of interest}
+\item{park}{Character vector of four-letter unit codes (\code{UNIT_CODE}), e.g.
+\code{c("ROMO", "GRCA")}. Codes that match no unit are dropped without a
+warning.}
 
-\item{save}{Whether to save (TRUE) the resulting shapefile or not (FALSE)}
+\item{save}{Logical. If \code{TRUE}, writes each unit to
+\verb{<path><code>/<code>_park_boundary.shp}, creating the \verb{<code>} folder if
+needed. Default \code{FALSE}.}
 
-\item{path}{If \code{save = TRUE}, the file path to save the shapefile}
+\item{path}{Folder to save the shapefiles in when \code{save = TRUE}. It must
+end with \code{/}.}
 }
 \value{
-A spatial sf object for each specified park boundary
+An sf object (CRS NAD83) with one row per unit and columns
+\code{UNIT_CODE}, \code{REGION}, \code{STATE}, \code{UNIT_NAME}, \code{PARKNAME} and \code{geometry},
+grouped by all of them except \code{geometry}.
 }
 \description{
-This function uses the Data Store REST Api to download national park boundary
-shapefiles.
-Use this resource to get updated REST URL: https://irmaservices.nps.gov/datastore/v6/documentation/datastore-api.html#/Search_By_Reference_Code/ReferenceCodeSearch_Get
-And this to find updated download links: https://irma.nps.gov/DataStore/Reference/Profile/2224545?lnv=True
+Downloads the boundaries of all NPS units with \code{\link[=getParkSystem]{getParkSystem()}}, keeps the
+units in \code{park}, and merges each unit into a single (multi)polygon.
+Optionally saves one shapefile per unit. Needs internet.
+}
+\examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+bounds <- getParkBoundary(c("ROMO", "GRCA"))
+plot(sf::st_geometry(bounds))
+
+# Also save one shapefile per park in tempdir()
+bounds <- getParkBoundary("ROMO", save = TRUE, path = paste0(tempdir(), "/"))
+list.files(file.path(tempdir(), "ROMO"))
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{\link[=getParkSystem]{getParkSystem()}} for every unit.
 }

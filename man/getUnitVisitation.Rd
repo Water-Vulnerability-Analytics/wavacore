@@ -2,7 +2,7 @@
 % Please edit documentation in R/getUnitVisitation.R
 \name{getUnitVisitation}
 \alias{getUnitVisitation}
-\title{Retrieve NPS park visitation data}
+\title{Get monthly visitation for NPS units}
 \usage{
 getUnitVisitation(
   units,
@@ -14,22 +14,50 @@ getUnitVisitation(
 )
 }
 \arguments{
-\item{units}{The park unit(s) 4 digit code to get visitation for. Can supply a string of park codes or single code.}
+\item{units}{Character vector of four-letter unit codes, e.g.
+\code{c("ROMO", "GRCA")}.}
 
-\item{startMonth}{The start month for visitation data, values 1-12. Default is 1 (January).}
+\item{startMonth}{First month to include, 1-12. Default 1 (January).}
 
-\item{startYear}{The start year for visitation data.}
+\item{startYear}{First year to include.}
 
-\item{endMonth}{The end month for visitation data, values 1-12. Default is 12 (December).}
+\item{endMonth}{Last month to include, 1-12. Default 12 (December).}
 
-\item{endYear}{The end year for visitation data.}
+\item{endYear}{Last year to include.}
 
-\item{allStats}{If TRUE, pulls all visitation statistics from the IRMA dataset. Default is FALSE.}
+\item{allStats}{Logical. If \code{TRUE}, returns every statistic from the full
+dataset (a larger, slower download). Default \code{FALSE}.}
 }
 \value{
-A single dataframe/tibble of visitation statistics for specified parks.
-Dataframe contains visitation numbers for each month of each year.
+A tibble with one row per unit and month. With \code{allStats = FALSE},
+the columns are \code{UnitCode}, \code{UnitName}, \code{Year}, \code{Month},
+\code{RecreationVisitors} and \code{NonRecreationVisitors}. With \code{allStats = TRUE},
+they are \code{UnitCode}, \code{Year}, \code{Month} and one column per statistic (e.g.
+\code{RecreationVisitors}, \code{TotalVisitors}, \code{TotalOvernightStays}).
 }
 \description{
-This function uses the IRMA STATS REST Api to pull visitation data for Nation Parks
+Gets monthly visitor counts for one or more NPS units from NPS Visitor Use
+Statistics. By default it calls the IRMA STATS REST API, which returns
+recreation and non-recreation visitors. With \code{allStats = TRUE} it downloads
+the full visitation dataset from the NPS Data Store instead, which has every
+statistic (visitor hours, overnight stays, campers and so on). Needs
+internet.
+}
+\examples{
+\dontshow{if (curl::has_internet()) withAutoprint(\{ # examplesIf}
+# Monthly visitation for two parks in 2023
+getUnitVisitation(c("ROMO", "GRCA"), startYear = 2023, endYear = 2023)
+
+# Summer months only
+getUnitVisitation("ROMO", startMonth = 6, startYear = 2023,
+                  endMonth = 8, endYear = 2023)
+
+# Every statistic, from the full dataset (slower)
+if (interactive()) {
+  getUnitVisitation("ROMO", startYear = 2023, endYear = 2023, allStats = TRUE)
+}
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{\link[=getParkSystem]{getParkSystem()}} to look up unit codes (\code{UNIT_CODE}).
 }
