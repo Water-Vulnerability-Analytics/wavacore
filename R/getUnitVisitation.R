@@ -8,14 +8,25 @@
 #' statistic (visitor hours, overnight stays, campers and so on). Needs
 #' internet.
 #'
-#' @param units Character vector of four-letter unit codes, e.g.
-#'   `c("ROMO", "GRCA")`.
-#' @param startMonth First month to include, 1-12. Default 1 (January).
-#' @param startYear First year to include.
-#' @param endMonth Last month to include, 1-12. Default 12 (December).
-#' @param endYear Last year to include.
-#' @param allStats Logical. If `TRUE`, returns every statistic from the full
-#'   dataset (a larger, slower download). Default `FALSE`.
+#' @param units Character vector. Four-letter unit codes, e.g.
+#'   `c("ROMO", "GRCA")`. Required.
+#' @param startMonth Integer, 1-12. The first month to include, in
+#'   `startYear`. Default: `1` (January).
+#' @param startYear Integer. The first year to include. Required.
+#' @param endMonth Integer, 1-12. The last month to include, in `endYear`.
+#'   Default: `12` (December).
+#' @param endYear Integer. The last year to include. Required.
+#' @param allStats Logical. Where the data comes from and which statistics are
+#'   returned.
+#'   * `TRUE`: downloads the full visitation dataset from the NPS Data Store
+#'     and keeps the requested units and months. Slower (a few seconds), and
+#'     returns every statistic: visitor hours, overnight stays, campers and so
+#'     on, without `UnitName`.
+#'   * `FALSE`: asks the IRMA STATS REST API for the requested units and
+#'     months. Fast, and returns `UnitName`, `RecreationVisitors` and
+#'     `NonRecreationVisitors` only.
+#'
+#'   Default: `FALSE`.
 #'
 #' @return A tibble with one row per unit and month. With `allStats = FALSE`,
 #'   the columns are `UnitCode`, `UnitName`, `Year`, `Month`,

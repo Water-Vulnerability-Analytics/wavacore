@@ -5,14 +5,26 @@
 #' units in `park`, and merges each unit into a single (multi)polygon.
 #' Optionally saves one shapefile per unit. Needs internet.
 #'
-#' @param park Character vector of four-letter unit codes (`UNIT_CODE`), e.g.
+#' @param park Character vector. Four-letter unit codes (`UNIT_CODE`), e.g.
 #'   `c("ROMO", "GRCA")`. Codes that match no unit are dropped without a
-#'   warning.
-#' @param save Logical. If `TRUE`, writes each unit to
-#'   `<path><code>/<code>_park_boundary.shp`, creating the `<code>` folder if
-#'   needed. Default `FALSE`.
-#' @param path Folder to save the shapefiles in when `save = TRUE`. It must
-#'   end with `/`.
+#'   warning. Required.
+#' @param save Logical. Whether to also write each unit to a shapefile.
+#'   * `TRUE`: for each code, creates the folder `<path><code>` if needed and
+#'     writes `<path><code>/<code>_park_boundary.shp`, then prints where the
+#'     files went. Needs a `path` that ends with `/`.
+#'   * `FALSE`: writes nothing, and `path` is not used.
+#'
+#'   Default: `FALSE`.
+#' @param path String or `NULL`. The folder to save the shapefiles in when
+#'   `save = TRUE`.
+#'   * A folder path that ends with `/`, e.g. `"output/"`: the shapefiles go
+#'     in one subfolder per unit.
+#'   * A folder path without the final `/`: the function creates the wrong
+#'     folder (`outputROMO`) and the write fails.
+#'   * `NULL`: works only with `save = FALSE`; with `save = TRUE` the write
+#'     fails.
+#'
+#'   Default: `NULL`.
 #'
 #' @return An sf object (CRS NAD83) with one row per unit and columns
 #'   `UNIT_CODE`, `REGION`, `STATE`, `UNIT_NAME`, `PARKNAME` and `geometry`,
