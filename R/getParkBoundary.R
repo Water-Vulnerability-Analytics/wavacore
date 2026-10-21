@@ -32,7 +32,7 @@ getParkBoundary <- function(park, save = FALSE, path = NULL){
       }
       
       # save park boundary in park folder
-      sf::write_sf(filter(park_boundary, UNIT_CODE == park[i]), 
+      sf::write_sf(dplyr::filter(park_boundary, UNIT_CODE == park[i]), 
                    paste0(path, "/", park[i], "/", park[i], "_park_boundary.shp"))
       
       
