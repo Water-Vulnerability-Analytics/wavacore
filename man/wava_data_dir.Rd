@@ -10,7 +10,11 @@ wava_data_dir()
 A path as a character string.
 }
 \description{
-Looks for the folder in this order: \code{options(wava.data_dir = ...)}, the
-\code{WAVA_DATA_DIR} environment variable, then \code{"data"} in the working directory
-(the link to the shared OneDrive folder that every WaVA repo already has).
+Looks for the folder in this order:
+\enumerate{
+\item \code{options(wava.data_dir = ...)}
+\item the \code{WAVA_DATA_DIR} environment variable (an empty value counts as unset)
+\item \code{"data"} in the working directory (the link to the shared OneDrive folder
+that every WaVA repo already has)
+}
 }
