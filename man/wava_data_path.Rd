@@ -7,8 +7,13 @@
 wava_data_path(...)
 }
 \arguments{
-\item{...}{Path pieces below the data folder, as character strings, as in
-\code{\link[=file.path]{file.path()}}. With no pieces, returns the data folder itself.}
+\item{...}{Strings. Path pieces below the data folder, as in \code{\link[=file.path]{file.path()}}.
+\itemize{
+\item One or more pieces, e.g. \verb{"rapid", "inputs"}: returns
+\verb{<data folder>/rapid/inputs}.
+\item No pieces: returns the data folder itself, the same as
+\code{\link[=wava_data_dir]{wava_data_dir()}}.
+}}
 }
 \value{
 A path as a character string. The function does not check that the

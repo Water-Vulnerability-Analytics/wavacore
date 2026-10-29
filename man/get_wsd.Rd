@@ -14,30 +14,72 @@ get_wsd(
 )
 }
 \arguments{
-\item{conus}{Logical. If \code{TRUE} (default), drops sources in Alaska, Hawaii
-and the territories (\code{state} is AK, AS, HI, MP, PR, VI or GU).}
+\item{conus}{Logical. Whether to keep only sources in the contiguous US.
+\itemize{
+\item \code{TRUE}: drops sources whose \code{state} is AK, AS, HI, MP, PR, VI or GU
+(Alaska, Hawaii and the territories).
+\item \code{FALSE}: keeps sources in every state and territory.
+}
 
-\item{fill_empty_coords}{Logical. If \code{TRUE}, sources with no coordinates get
-a point inside their park unit, from \code{\link[=getParkSystem]{getParkSystem()}}. For a unit made of
-separate pieces, the point is in a piece in the source's state. Adds a
-\code{coords_flag} column. Downloads the NPS and US state boundaries, so it
-needs internet. Default \code{FALSE}.}
+Ignored when \code{rapid = TRUE}, which always uses \code{TRUE}. Default: \code{TRUE}.}
 
-\item{park}{Character vector of four-letter park unit codes, e.g.
-\code{c("ROMO", "GRCA")}. If \code{NULL} (default), keeps every park.}
+\item{fill_empty_coords}{Logical. Whether to fill in coordinates for sources
+that have no longitude or latitude in the database.
+\itemize{
+\item \code{TRUE}: downloads the NPS unit boundaries (\code{\link[=getParkSystem]{getParkSystem()}}) and the US
+state boundaries, so it needs internet and takes longer. Each source
+with missing coordinates gets a point inside its park unit. For a unit
+made of separate pieces, the point is in the piece in the source's
+state (or the park's state when \code{source_state} is empty); if several
+pieces match, the first one is used. Sources whose park unit has no
+boundary keep empty coordinates. Adds a \code{coords_flag} column
+(\code{"Source Coordinates"} or \code{"Centroid"}), and the filled rows are moved
+to the end of the table.
+\item \code{FALSE}: keeps the coordinates as they are in the database, downloads
+nothing, and adds no \code{coords_flag} column.
+}
 
-\item{sf}{Logical. If \code{TRUE} (default), returns an sf object of points (CRS
-4326) and drops sources that still have no coordinates. If \code{FALSE},
-returns a tibble with every source.}
+Ignored when \code{rapid = TRUE}, which always uses \code{TRUE}. Default: \code{FALSE}.}
 
-\item{rapid}{Logical. If \code{TRUE}, uses the rapid assessment settings: sets
-\code{conus}, \code{fill_empty_coords} and \code{sf} to \code{TRUE}, and drops sources whose
-\code{source_type} mentions municipal, hauled, tribal or purchased water.
-Default \code{FALSE}.}
+\item{park}{Character vector or \code{NULL}. The park units to keep.
+\itemize{
+\item A character vector of four-letter unit codes, e.g. \code{c("ROMO", "GRCA")}:
+keeps only sources whose \code{park_unit} is one of them. Codes that match
+nothing are dropped without a warning. The filter runs after the
+coordinate fill, so it doesn't make \code{fill_empty_coords = TRUE} faster.
+\item \code{NULL}: keeps every park.
+}
 
-\item{path}{Path to the WSD workbook. Defaults to
+Default: \code{NULL}.}
+
+\item{sf}{Logical. The class of the result.
+\itemize{
+\item \code{TRUE}: returns an sf object of points (CRS 4326, longitude/latitude)
+built from \code{source_longitude} and \code{source_latitude}, which are kept as
+columns. Sources that still have no coordinates are dropped.
+\item \code{FALSE}: returns a tibble with every source, including those with no
+coordinates.
+}
+
+Ignored when \code{rapid = TRUE}, which always uses \code{TRUE}. Default: \code{TRUE}.}
+
+\item{rapid}{Logical. Whether to use the settings for the rapid assessment.
+\itemize{
+\item \code{TRUE}: uses \code{conus = TRUE}, \code{fill_empty_coords = TRUE} and
+\code{sf = TRUE}, whatever those arguments are set to. Also drops sources
+whose \code{source_type} mentions municipal, hauled, tribal or purchased
+water (any case), and sources with no \code{source_type}.
+\item \code{FALSE}: uses \code{conus}, \code{fill_empty_coords} and \code{sf} as given, and keeps
+every source type.
+}
+
+Default: \code{FALSE}.}
+
+\item{path}{String. Path to the WSD workbook (\code{.xlsx}). The function reads
+the first sheet, skips its first row, and treats \code{"NA"} and \code{"U"} as
+missing. If no file exists at \code{path}, it stops with an error. Default:
 \code{Water_Supply_Systems/NPS_Water_Systems_Database_Joined.xlsx} in the shared
-data folder; see \code{\link[=wava_data_path]{wava_data_path()}}.}
+data folder, see \code{\link[=wava_data_path]{wava_data_path()}}.}
 }
 \value{
 One row per water source, with the workbook's columns renamed to

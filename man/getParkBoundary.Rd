@@ -7,16 +7,32 @@
 getParkBoundary(park, save = FALSE, path = NULL)
 }
 \arguments{
-\item{park}{Character vector of four-letter unit codes (\code{UNIT_CODE}), e.g.
+\item{park}{Character vector. Four-letter unit codes (\code{UNIT_CODE}), e.g.
 \code{c("ROMO", "GRCA")}. Codes that match no unit are dropped without a
-warning.}
+warning. Required.}
 
-\item{save}{Logical. If \code{TRUE}, writes each unit to
-\verb{<path><code>/<code>_park_boundary.shp}, creating the \verb{<code>} folder if
-needed. Default \code{FALSE}.}
+\item{save}{Logical. Whether to also write each unit to a shapefile.
+\itemize{
+\item \code{TRUE}: for each code, creates the folder \verb{<path><code>} if needed and
+writes \verb{<path><code>/<code>_park_boundary.shp}, then prints where the
+files went. Needs a \code{path} that ends with \code{/}.
+\item \code{FALSE}: writes nothing, and \code{path} is not used.
+}
 
-\item{path}{Folder to save the shapefiles in when \code{save = TRUE}. It must
-end with \code{/}.}
+Default: \code{FALSE}.}
+
+\item{path}{String or \code{NULL}. The folder to save the shapefiles in when
+\code{save = TRUE}.
+\itemize{
+\item A folder path that ends with \code{/}, e.g. \code{"output/"}: the shapefiles go
+in one subfolder per unit.
+\item A folder path without the final \code{/}: the function creates the wrong
+folder (\code{outputROMO}) and the write fails.
+\item \code{NULL}: works only with \code{save = FALSE}; with \code{save = TRUE} the write
+fails.
+}
+
+Default: \code{NULL}.}
 }
 \value{
 An sf object (CRS NAD83) with one row per unit and columns

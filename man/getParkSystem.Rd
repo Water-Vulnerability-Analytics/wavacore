@@ -7,12 +7,24 @@
 getParkSystem(save = FALSE, path = NULL)
 }
 \arguments{
-\item{save}{Logical. If \code{TRUE} and \code{path} is given, also writes the
-boundaries to a GeoPackage named \verb{nps_park_boundaries_<date>.gpkg} in
-\code{path}. Default \code{FALSE}.}
+\item{save}{Logical. Whether to also write the boundaries to a file.
+\itemize{
+\item \code{TRUE} with a \code{path}: writes a GeoPackage named
+\verb{nps_park_boundaries_<today's date>.gpkg} in \code{path}, replacing a file
+of the same name.
+\item \code{TRUE} without a \code{path}: writes nothing, without a message.
+\item \code{FALSE}: writes nothing.
+}
 
-\item{path}{Folder to write the GeoPackage to when \code{save = TRUE}. If \code{NULL}
-(default), nothing is written, even with \code{save = TRUE}.}
+Default: \code{FALSE}.}
+
+\item{path}{String or \code{NULL}. The folder to write the GeoPackage to.
+\itemize{
+\item A folder path: used when \code{save = TRUE}. The folder must already exist.
+\item \code{NULL}: nothing is written, even with \code{save = TRUE}.
+}
+
+Default: \code{NULL}.}
 }
 \value{
 An sf object of multipolygons (CRS NAD83), one row per NPS unit,
